@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1004355262206",
+    "project_id": "m-daily-66215",
+    "storage_bucket": "m-daily-66215.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004355262206:android:035859e3b28424935c77af",
+        "android_client_info": {
+          "package_name": "com.kh.mdaily"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2hmM8CZHiX8m4gbqHSnz6AC1iflvRvfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
