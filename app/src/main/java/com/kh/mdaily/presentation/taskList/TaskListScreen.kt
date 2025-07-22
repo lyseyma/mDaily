@@ -15,22 +15,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -52,9 +38,24 @@ fun TaskList(
 
     val tasks by viewModel.tasks.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    var showAddTaskDialog by remember { mutableStateOf(false) }
+    var taskTitle by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.fetchTasks()
+    }
+
+    if (showAddTaskDialog) {
+        AddTaskDialog(
+            title = taskTitle,
+            onTitleChange = { taskTitle = it },
+            onDismiss = { showAddTaskDialog = false },
+            onConfirm = {
+                // TODO: Add task to viewModel
+                taskTitle = ""
+                showAddTaskDialog = false
+            }
+        )
     }
 
     Scaffold(
@@ -62,14 +63,13 @@ fun TaskList(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    /* Intent to Add new task */
+                    showAddTaskDialog = true
                 },
-                containerColor= colorResource(id = R.color.colorPrimary),
+                containerColor = colorResource(id = R.color.colorPrimary),
                 shape = RoundedCornerShape(50.dp)
             ) {
                 Icon(Icons.Filled.AddCircle, contentDescription = "Add Task", tint = Color.White)
             }
-
         },
         topBar = {
             TopAppBar(
@@ -118,4 +118,48 @@ fun TaskList(
             }
         }
     }
+}
+
+@Composable
+fun AddTaskDialog(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Add New Task",
+                fontWeight = FontWeight.Bold,
+                color = colorResource(id = R.color.colorPrimary)
+            )
+        },
+        text = {
+            TextField(
+                value = title,
+                onValueChange = onTitleChange,
+                placeholder = { Text("Enter task title") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.colorPrimary)
+                )
+            ) {
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
 }
